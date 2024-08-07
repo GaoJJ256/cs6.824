@@ -26,6 +26,7 @@ func key2shard(key string) int {
 	return shard
 }
 
+// 生成一个随机的 64 位整数，用于唯一标识客户端操作
 func nrand() int64 {
 	max := big.NewInt(int64(1) << 62)
 	bigx, _ := rand.Int(rand.Reader, max)
@@ -33,10 +34,11 @@ func nrand() int64 {
 	return x
 }
 
+// 表示客户端
 type Clerk struct {
-	sm       *shardctrler.Clerk
-	config   shardctrler.Config
-	make_end func(string) *labrpc.ClientEnd
+	sm       *shardctrler.Clerk             // 片控制器的客户端
+	config   shardctrler.Config             // 当前配置
+	make_end func(string) *labrpc.ClientEnd // 用于创建 RPC 连接的函数
 	// You will have to modify this struct.
 }
 
@@ -96,7 +98,6 @@ func (ck *Clerk) PutAppend(key string, value string, op string) {
 	args.Key = key
 	args.Value = value
 	args.Op = op
-
 
 	for {
 		shard := key2shard(key)
